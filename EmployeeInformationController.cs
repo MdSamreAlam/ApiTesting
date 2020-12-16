@@ -57,6 +57,7 @@ Created By Alam
         // Post Employee Data and Save to Data base
         [HttpPost]
         [Route("Insert")]
+
         public IHttpActionResult PostUser(Employee employee)
         {
             string message = "";
@@ -85,5 +86,75 @@ Created By Alam
             return Ok(message);
         }
 
+
+        // Update Employee Data
+        [HttpPut]
+        [Route("UpdateEmployeeDetails")]
+        public IHttpActionResult UpdateEmployeeDetails(Employee employee)
+        {
+            string message = "";
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                Employee employee1 = new Employee();
+                employee1 = demotestEntities.Employees.Find(employee.Id);
+                
+                if (employee1 != null)
+                {
+                    employee1.FirstName = employee.FirstName;
+                    employee1.LastName = employee.LastName;
+                    employee1.salary = employee.salary;
+                    
+
+                }
+
+                int result = demotestEntities.SaveChanges();
+                if (result > 0)
+                {
+                    message = "Employee has been sussfully updated";
+                }
+                else
+                {
+                    message = "faild";
+                }
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return Ok(message);
+        }
+        // Delete Employee Information By Id
+        [HttpDelete]
+        [Route("DeleteEmployeeData/{id}")]
+        public IHttpActionResult DeleteEmployeeData(int id)
+        {
+            string message = "";
+            Employee employee = demotestEntities.Employees.Find(id);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            demotestEntities.Employees.Remove(employee);
+            int result = demotestEntities.SaveChanges();
+            if (result > 0)
+            {
+                message = "Employee has been sussfully deleted";
+            }
+            else
+            {
+                message = "faild";
+            }
+
+            return Ok(message);
+        }
     }
 }
+
